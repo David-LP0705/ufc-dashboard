@@ -1,0 +1,213 @@
+:root {
+  --fundo: #0b0c0f;
+  --cartao: #15171c;
+  --borda: #262a33;
+  --texto: #eceef2;
+  --suave: #98a1b0;
+  --vermelho: #e5383b;
+  --ouro: #d4af37;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--fundo) repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 2px, transparent 2px 38px);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+a { color: var(--ouro); }
+h1, h2, h3, .logo, .indicador span, .painel-numeros b, .cartel b { font-family: Oswald, "Arial Narrow", system-ui, sans-serif; letter-spacing: .4px; }
+
+/* ---------- topo ---------- */
+.topo {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(11, 12, 15, .94); backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--borda);
+}
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--texto); }
+.logo { background: var(--vermelho); color: #fff; font-weight: 700; font-size: 1.4rem; padding: 0 12px; border-radius: 4px; line-height: 1.5; }
+.subtitulo { text-transform: uppercase; letter-spacing: 3px; font-size: .78rem; color: var(--suave); }
+nav { display: flex; gap: 4px; overflow-x: auto; max-width: 100%; }
+nav a { color: var(--suave); text-decoration: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; white-space: nowrap; }
+nav a:hover { color: var(--texto); }
+nav a.ativo { color: #fff; background: #20232b; box-shadow: inset 0 -2px 0 var(--ouro); }
+.chip-usuario { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--texto); padding: 3px 10px 3px 3px; border: 1px solid var(--borda); border-radius: 999px; background: var(--cartao); max-width: 190px; }
+.chip-usuario:hover { border-color: var(--ouro); }
+.nome-usuario { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .85rem; font-weight: 600; }
+
+/* ---------- estrutura ---------- */
+main { max-width: 1200px; margin: 0 auto; padding: 16px; }
+.pagina { display: grid; gap: 16px; }
+.titulo h1 { margin: 8px 0 2px; font-size: clamp(1.7rem, 5vw, 2.4rem); text-transform: uppercase; }
+.titulo p { margin: 0; color: var(--suave); }
+.secao { margin: 8px 0 -4px; font-size: 1.1rem; text-transform: uppercase; color: var(--ouro); }
+.cartao { background: var(--cartao); border: 1px solid var(--borda); border-radius: 12px; padding: 16px; }
+h2 { margin: 0 0 6px; }
+h3 { margin: 0 0 8px; font-size: 1.05rem; text-transform: uppercase; letter-spacing: .8px; }
+.nota { color: var(--suave); font-size: .86rem; margin: 0 0 10px; }
+.centro { text-align: center; }
+.texto-centro { text-align: center; }
+
+/* ---------- formulários e botões ---------- */
+.filtros { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+label { display: grid; gap: 4px; font-size: .84rem; color: var(--suave); }
+.campo-busca { flex: 1 1 240px; }
+select, input[type="text"], input[type="number"], input[type="search"] {
+  background: #0d0e12; color: var(--texto); border: 1px solid var(--borda);
+  border-radius: 8px; padding: 9px 10px; font-size: .95rem; min-width: 0; width: 100%;
+}
+button, .link-secundario {
+  background: var(--vermelho); color: #fff; border: 0; border-radius: 8px;
+  padding: 9px 14px; font-size: .92rem; cursor: pointer; font-weight: 600; text-decoration: none; display: inline-block;
+}
+button:hover { filter: brightness(1.12); }
+button.secundario, .link-secundario { background: transparent; color: var(--texto); border: 1px solid var(--borda); }
+button.pequeno { padding: 5px 9px; font-size: .8rem; }
+button.perigo { background: #7a1e20; }
+:focus-visible { outline: 2px solid var(--ouro); outline-offset: 2px; }
+.voltar { display: inline-block; margin-bottom: 10px; text-decoration: none; font-weight: 600; }
+.aviso { background: #3a2f0b; border: 1px solid #6b5a14; color: #ffe58f; padding: 10px 12px; border-radius: 8px; margin-bottom: 12px; font-size: .88rem; }
+.acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* ---------- indicadores ---------- */
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.indicador { text-align: center; }
+.indicador span { display: block; font-size: 2rem; font-weight: 700; color: var(--vermelho); line-height: 1.2; }
+.indicador small { color: var(--suave); }
+
+/* ---------- gráficos ---------- */
+.grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.larga { grid-column: 1 / -1; }
+.area-grafico { position: relative; height: 300px; }
+.area-grafico.alta { height: 400px; }
+
+/* ---------- avatares ---------- */
+.avatar { display: inline-grid; place-items: center; flex: none; overflow: hidden; border-radius: 50%; background: #23262e; color: var(--suave); width: 40px; height: 40px; font-weight: 700; }
+.avatar.pequeno { width: 36px; height: 36px; font-size: .8rem; }
+.avatar.medio { width: 88px; height: 88px; font-size: 1.5rem; }
+.avatar.destaque { width: 96px; height: 96px; font-size: 1.8rem; }
+.avatar.grande { width: 200px; height: 200px; border-radius: 14px; font-size: 3.2rem; }
+.avatar.enorme { width: 240px; height: 300px; border-radius: 14px; font-size: 4rem; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+
+/* ---------- destaques e campeões ---------- */
+.destaques { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.cartao-destaque { display: grid; justify-items: center; gap: 2px; text-align: center; padding: 14px 8px; background: var(--cartao); border: 1px solid var(--borda); border-radius: 12px; text-decoration: none; color: var(--texto); }
+.cartao-destaque:hover { border-color: var(--ouro); }
+.cartao-destaque b { margin-top: 6px; }
+.cartao-destaque span { color: var(--ouro); font-weight: 600; }
+.cartao-destaque small { color: var(--suave); }
+.cartao-destaque .categoria-campeao { color: var(--ouro); font-size: .7rem; text-transform: uppercase; letter-spacing: 1px; }
+.cartao-destaque.campeao .avatar.medio { border: 2px solid var(--ouro); }
+
+/* ---------- tabelas ---------- */
+.tabela-rolagem { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { text-align: left; padding: 8px 8px; border-bottom: 1px solid var(--borda); vertical-align: middle; }
+th { color: var(--suave); font-weight: 600; white-space: nowrap; }
+table.ranking tbody tr { cursor: pointer; }
+table.ranking tbody tr:hover { background: #1b1e25; }
+td.posicao { color: var(--suave); width: 36px; }
+.lutador-linha { display: flex; align-items: center; gap: 10px; }
+.lutador-linha small { display: block; color: var(--suave); }
+td.botoes-linha { white-space: nowrap; }
+td.botoes-linha button { margin-right: 6px; }
+td.estrelas { color: var(--ouro); white-space: nowrap; }
+.texto-ouro { color: var(--ouro) !important; font-weight: 600; }
+#buscaFavorito { margin-bottom: 10px; }
+.resultado { display: inline-block; min-width: 28px; text-align: center; padding: 1px 6px; border-radius: 6px; font-weight: 700; font-size: .8rem; }
+.resultado-V { background: #1d4d2b; color: #8ff0a4; }
+.resultado-D { background: #5a1c1e; color: #ff9b9d; }
+.resultado-E, .resultado-S { background: #33363f; color: #c3c9d4; }
+
+/* ---------- eventos ---------- */
+.lista-eventos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.item-evento { display: grid; gap: 2px; padding: 12px; background: var(--cartao); border: 1px solid var(--borda); border-radius: 10px; text-decoration: none; color: var(--texto); }
+.item-evento:hover { border-color: var(--vermelho); }
+.item-evento .data-evento { color: var(--ouro); font-size: .8rem; font-weight: 600; }
+.item-evento small { color: var(--suave); }
+.duelo { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 8px 0 14px; }
+.duelo span { color: var(--ouro); text-transform: uppercase; font-size: .8rem; letter-spacing: 1px; }
+.lista-lutas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.item-luta { display: grid; gap: 2px; padding: 10px 12px; background: #101216; border: 1px solid var(--borda); border-radius: 10px; text-align: center; }
+.item-luta .categoria-luta { color: var(--suave); font-size: .8rem; }
+.item-luta .categoria-luta em { color: var(--ouro); font-style: normal; font-weight: 700; text-transform: uppercase; }
+.item-luta small { color: var(--suave); }
+.confronto { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
+.confronto .lado:first-child { text-align: right; }
+.confronto .lado:last-child { text-align: left; }
+.confronto .versus { color: var(--suave); font-size: .8rem; }
+.lado { color: var(--suave); }
+.lado a { color: inherit; text-decoration: none; }
+.lado a:hover { text-decoration: underline; }
+.lado.vencedor { color: var(--texto); font-weight: 700; }
+
+/* ---------- perfil do lutador ---------- */
+.cabecalho-lutador { display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start; margin-bottom: 16px; }
+.cabecalho-lutador h2 { font-size: clamp(1.8rem, 5vw, 2.6rem); text-transform: uppercase; line-height: 1.1; }
+.apelido { margin: 0 0 6px; color: var(--ouro); }
+.cartel { margin: 4px 0 10px; color: var(--suave); }
+.cartel b { color: var(--texto); font-size: 1.6rem; }
+.etiquetas { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.etiquetas span { background: #20232b; border: 1px solid var(--borda); border-radius: 999px; padding: 2px 10px; font-size: .78rem; color: var(--suave); text-transform: uppercase; letter-spacing: .5px; }
+.etiquetas span.ouro { color: var(--ouro); border-color: #6b5a14; }
+.ficha { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 10px; }
+.ficha div { background: #101216; border: 1px solid var(--borda); border-radius: 8px; padding: 6px 10px; }
+.ficha small { display: block; color: var(--suave); font-size: .72rem; text-transform: uppercase; }
+.biografia { margin: 0 0 10px; max-width: 70ch; color: #c8cdd6; }
+.painel-numeros { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); background: #f4f4f5; color: #111; border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+.painel-numeros div { text-align: center; padding: 12px 8px; border-right: 1px solid #d4d4d8; }
+.painel-numeros div:last-child { border-right: 0; }
+.painel-numeros b { display: block; font-size: 2.2rem; line-height: 1.1; }
+.painel-numeros small { color: #52525b; text-transform: uppercase; font-size: .7rem; letter-spacing: .5px; }
+.linha-medida { display: grid; grid-template-columns: 170px 1fr 70px; gap: 10px; align-items: center; margin: 6px 0; font-size: .9rem; }
+.linha-medida span { color: var(--suave); }
+.linha-medida b { text-align: right; }
+.trilho { height: 8px; background: #262a33; border-radius: 99px; overflow: hidden; }
+.trilho i { display: block; height: 100%; background: linear-gradient(90deg, var(--vermelho), var(--ouro)); }
+.duas-colunas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 28px; }
+
+/* ---------- lutador preferido ---------- */
+.cartao-preferido { display: grid; gap: 8px; justify-items: center; text-align: center; height: 100%; align-content: center; }
+.cartao-preferido .avatar { width: 150px; height: 150px; border-radius: 14px; font-size: 2.4rem; }
+.cartao-preferido h3 { margin: 0; }
+.cartao-preferido b { font-size: 1.15rem; }
+.cartao-preferido .numeros { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.cartao-preferido .numeros span { color: var(--suave); font-size: .8rem; }
+.cartao-preferido .numeros b { display: block; color: var(--texto); font-family: Oswald, sans-serif; font-size: 1.5rem; }
+.destaque-preferido { grid-template-columns: 240px 1fr; border-color: #6b5a14; background: linear-gradient(135deg, #1b1a14, var(--cartao) 55%); }
+#destaquePreferido .painel-numeros { margin: 16px 0 0; }
+
+/* ---------- Minha área ---------- */
+.perfil-usuario { display: flex; gap: 18px; align-items: flex-start; }
+.dados-usuario { flex: 1; min-width: 0; }
+.dados-usuario small { color: var(--suave); text-transform: uppercase; letter-spacing: 1px; font-size: .72rem; }
+.dados-usuario h2 { margin: 0 0 8px; text-transform: uppercase; }
+#formularioPerfil { display: grid; gap: 10px; margin-top: 10px; max-width: 420px; }
+#formularioPerfil input[type="file"] { padding: 7px; }
+#formularioFavorito { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; align-items: end; }
+#formularioFavorito .grande { grid-column: span 2; }
+
+footer { text-align: center; color: var(--suave); font-size: .8rem; padding: 20px 16px 32px; }
+
+@media (max-width: 700px) {
+  .cabecalho-lutador { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .cabecalho-lutador .etiquetas, .cabecalho-lutador .acoes { justify-content: center; }
+  .avatar.grande { width: 160px; height: 160px; }
+  .avatar.enorme { width: 200px; height: 250px; }
+  .linha-medida { grid-template-columns: 110px 1fr 56px; }
+  #formularioFavorito .grande { grid-column: auto; }
+  .area-grafico { height: 260px; }
+  .area-grafico.alta { height: 360px; }
+  .filtros label { flex: 1 1 140px; }
+  .confronto { grid-template-columns: 1fr; gap: 0; }
+  .confronto .lado:first-child, .confronto .lado:last-child { text-align: center; }
+  .perfil-usuario { flex-direction: column; align-items: center; text-align: center; }
+  .destaque-preferido { grid-template-columns: 1fr; }
+  .nome-usuario { display: none; }
+  .chip-usuario { padding: 3px; }
+}

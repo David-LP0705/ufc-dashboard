@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UFC Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="#/visao"><span class="logo">UFC</span><span class="subtitulo">Dashboard</span></a>
+    <nav id="menu" aria-label="Seções">
+      <a href="#/visao" data-pagina="visao">Visão geral</a>
+      <a href="#/eventos" data-pagina="eventos">Eventos</a>
+      <a href="#/lutadores" data-pagina="lutadores">Lutadores</a>
+      <a href="#/minha" data-pagina="minha">Minha área</a>
+    </nav>
+    <a id="chipUsuario" class="chip-usuario" href="#/minha" title="Meu perfil"></a>
+  </header>
+
+  <main>
+    <!-- Visão geral -->
+    <section id="pagina-visao" class="pagina" hidden>
+      <div class="titulo">
+        <h1>Visão geral</h1>
+        <p>Lutas do UFC de 1993 a 2026: como terminam, quanto duram e quem mais venceu.</p>
+      </div>
+
+      <div class="filtros cartao" aria-label="Filtros">
+        <label>Categoria de peso
+          <select id="filtroCategoria"><option value="-1">Todas</option></select>
+        </label>
+        <label>De
+          <select id="filtroDe"></select>
+        </label>
+        <label>Até
+          <select id="filtroAte"></select>
+        </label>
+        <button id="botaoLimpar" type="button" class="secundario">Limpar filtros</button>
+      </div>
+
+      <div class="indicadores" aria-label="Indicadores">
+        <div class="cartao indicador"><span id="indicadorLutas">–</span><small>lutas no filtro</small></div>
+        <div class="cartao indicador"><span id="indicadorFinalizacao">–</span><small>terminaram antes dos juízes</small></div>
+        <div class="cartao indicador"><span id="indicadorDuracao">–</span><small>duração média (min)</small></div>
+        <div class="cartao indicador"><span id="indicadorEventos">–</span><small>eventos na base</small></div>
+        <div class="cartao indicador"><span id="indicadorLutadores">–</span><small>lutadores na base</small></div>
+      </div>
+
+      <h2 class="secao">Destaques: mais vitórias no filtro</h2>
+      <div id="destaques" class="destaques"></div>
+
+      <div class="grade">
+        <article class="cartao">
+          <h3>Como as lutas terminam</h3>
+          <div class="area-grafico"><canvas id="graficoMetodos"></canvas></div>
+        </article>
+        <article class="cartao">
+          <h3>Lutas por ano</h3>
+          <div class="area-grafico"><canvas id="graficoAnos"></canvas></div>
+        </article>
+        <article class="cartao" id="cartaoPreferido" aria-label="Lutador preferido"></article>
+        <article class="cartao larga">
+          <h3>Lutas por categoria de peso</h3>
+          <p class="nota">Respeita o período. A categoria escolhida no filtro aparece em dourado.</p>
+          <div class="area-grafico"><canvas id="graficoCategorias"></canvas></div>
+        </article>
+        <article class="cartao larga">
+          <h3>Lutadores com mais vitórias</h3>
+          <p class="nota">Clique em uma barra para abrir o perfil.</p>
+          <div class="area-grafico alta"><canvas id="graficoVitorias"></canvas></div>
+        </article>
+        <article class="cartao larga">
+          <h3>Duração média das lutas por categoria</h3>
+          <p class="nota">Em minutos, calculada pelo round e pelo tempo do fim da luta. Respeita o período.</p>
+          <div class="area-grafico"><canvas id="graficoDuracao"></canvas></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Eventos e lutas -->
+    <section id="pagina-eventos" class="pagina" hidden>
+      <div class="titulo">
+        <h1>Eventos e lutas</h1>
+        <p>Histórico de eventos do UFC, com o card de lutas e os resultados.</p>
+      </div>
+
+      <div id="blocoListaEventos">
+        <div class="filtros cartao">
+          <label class="campo-busca">Buscar evento ou local
+            <input type="search" id="buscaEvento" placeholder="Ex.: UFC 100, Las Vegas, Rio…">
+          </label>
+          <label>Ano
+            <select id="filtroAnoEvento"><option value="">Todos</option></select>
+          </label>
+        </div>
+        <p id="infoEventos" class="nota"></p>
+        <div id="listaEventos" class="lista-eventos"></div>
+        <div class="centro"><button id="botaoMaisEventos" type="button" class="secundario">Mostrar mais</button></div>
+      </div>
+
+      <div id="detalheEvento" hidden></div>
+    </section>
+
+    <!-- Lutadores -->
+    <section id="pagina-lutadores" class="pagina" hidden>
+      <div id="blocoListaLutadores">
+        <div class="titulo">
+          <h1>Lutadores</h1>
+          <p>Ranking dos lutadores com 5 ou mais lutas no UFC. Clique em um nome para ver o perfil.</p>
+        </div>
+
+        <h2 class="secao">Últimos vencedores de cinturão</h2>
+        <p class="nota">Segundo a base (até agosto de 2026): vencedor da luta de título mais recente de cada categoria. Pode não coincidir com o campeão oficial atual em caso de título vago, interino ou aposentadoria.</p>
+        <div id="campeoes" class="destaques"></div>
+
+        <div class="filtros cartao">
+          <label class="campo-busca">Buscar lutador
+            <input type="search" id="buscaLutador" placeholder="Ex.: Anderson Silva">
+          </label>
+          <label>Categoria
+            <select id="filtroCategoriaLutador"><option value="-1">Todas</option></select>
+          </label>
+          <label>Ordenar por
+            <select id="ordemLutadores"></select>
+          </label>
+        </div>
+        <p id="infoLutadores" class="nota"></p>
+        <div class="tabela-rolagem cartao">
+          <table class="ranking">
+            <thead><tr><th>#</th><th>Lutador</th><th>Categoria</th><th>V-D-E</th><th>% fin.</th><th>Precisão</th><th>Lutas</th></tr></thead>
+            <tbody id="corpoLutadores"></tbody>
+          </table>
+        </div>
+        <div class="centro"><button id="botaoMaisLutadores" type="button" class="secundario">Mostrar mais</button></div>
+      </div>
+
+      <div id="perfilLutador" hidden></div>
+    </section>
+
+    <!-- Minha área -->
+    <section id="pagina-minha" class="pagina" hidden>
+      <div class="titulo">
+        <h1>Minha área</h1>
+        <p>Seus lutadores favoritos, com nota, previsão e anotações. Cadastro, edição e exclusão salvos no Back4App.</p>
+      </div>
+
+      <div class="cartao perfil-usuario">
+        <div id="avatarUsuario"></div>
+        <div class="dados-usuario">
+          <small>Meu perfil</small>
+          <h2 id="nomeUsuario">Visitante</h2>
+          <button type="button" id="botaoEditarPerfil" class="secundario pequeno">Editar nome e foto</button>
+          <form id="formularioPerfil" hidden>
+            <label>Nome
+              <input type="text" id="campoNomeUsuario" maxlength="40" placeholder="Seu nome">
+            </label>
+            <label>Foto (opcional)
+              <input type="file" id="campoFotoUsuario" accept="image/*">
+            </label>
+            <div class="acoes">
+              <button type="submit" class="pequeno">Salvar</button>
+              <button type="button" id="botaoRemoverFoto" class="secundario pequeno">Remover foto</button>
+              <button type="button" id="botaoFecharPerfil" class="secundario pequeno">Fechar</button>
+            </div>
+          </form>
+          <p id="mensagemPerfil" class="nota" role="status"></p>
+        </div>
+      </div>
+
+      <div id="destaquePreferido"></div>
+
+      <div class="cartao">
+        <h3>Adicionar ou editar favorito</h3>
+        <div id="aviso" class="aviso" hidden></div>
+        <form id="formularioFavorito" autocomplete="off">
+          <input type="hidden" id="favoritoId">
+          <label>Lutador
+            <input type="text" id="campoLutador" list="listaNomes" required placeholder="Digite o nome e escolha na lista">
+            <datalist id="listaNomes"></datalist>
+          </label>
+          <label>Minha nota
+            <select id="campoNota">
+              <option value="5">5 – ★★★★★</option>
+              <option value="4">4 – ★★★★</option>
+              <option value="3">3 – ★★★</option>
+              <option value="2">2 – ★★</option>
+              <option value="1">1 – ★</option>
+            </select>
+          </label>
+          <label class="grande">Previsão
+            <input type="text" id="campoPrevisao" maxlength="100" placeholder="Ex.: vai disputar o cinturão em 2027">
+          </label>
+          <label class="grande">Anotação
+            <input type="text" id="campoAnotacao" maxlength="200" placeholder="Ex.: melhor jiu-jitsu da categoria">
+          </label>
+          <div class="acoes">
+            <button type="submit" id="botaoSalvarFavorito">Adicionar favorito</button>
+            <button type="button" id="botaoCancelarFavorito" class="secundario" hidden>Cancelar edição</button>
+          </div>
+        </form>
+        <p id="mensagemFavorito" class="nota" role="status"></p>
+      </div>
+
+      <div class="cartao">
+        <input type="search" id="buscaFavorito" placeholder="Buscar nos favoritos…" aria-label="Buscar nos favoritos">
+        <div class="tabela-rolagem">
+          <table>
+            <thead><tr><th>Lutador</th><th>Nota</th><th>Previsão</th><th>Anotação</th><th></th></tr></thead>
+            <tbody id="corpoFavoritos"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Dados: Kaggle “UFC datasets 1994–2025” (somente eventos do UFC). Fotos e biografias: API da Wikipedia. Projeto acadêmico — UNICAP, Sistemas para Internet.</footer>
+
+  <script src="config.js"></script>
+  <script src="js/nucleo.js"></script>
+  <script src="js/visao-geral.js"></script>
+  <script src="js/eventos.js"></script>
+  <script src="js/lutadores.js"></script>
+  <script src="js/minha-area.js"></script>
+  <script src="js/principal.js"></script>
+</body>
+</html>
