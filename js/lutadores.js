@@ -1,8 +1,7 @@
-/* Lutadores: campeões, ranking com busca/filtro/ordenação e perfil individual. */
+/* Lutadores: ranking com busca/filtro/ordenação e perfil individual. */
 (function () {
-  const { porId, escapar, formatarNumero, formatarDecimal, normalizar, formatarData, nomeCategoria, htmlAvatar, observarFotos, CORES, opcoesGrafico } = UFC;
+  const { porId, escapar, formatarNumero, normalizar, formatarData, nomeCategoria, htmlAvatar, observarFotos, CORES, opcoesGrafico } = UFC;
   const POR_PAGINA = 20;
-  const ORDEM_CAMPEOES = ['Peso Mosca', 'Peso Galo', 'Peso Pena', 'Peso Leve', 'Meio-Médio', 'Médio', 'Meio-Pesado', 'Peso Pesado', 'Palha (F)', 'Mosca (F)', 'Galo (F)'];
   const RESULTADOS = { V: 'Vitória', D: 'Derrota', E: 'Empate', S: 'Sem resultado' };
 
   const filtro = { busca: '', categoria: -1, ordem: 'vitorias', quantidade: POR_PAGINA };
@@ -16,38 +15,12 @@
   const ORDENACOES = {
     vitorias: { rotulo: 'Mais vitórias', aceita: () => true, comparar: (a, b) => b.vitorias - a.vitorias || b.lutas - a.lutas },
     lutas: { rotulo: 'Mais lutas', aceita: () => true, comparar: (a, b) => b.lutas - a.lutas || b.vitorias - a.vitorias },
-    ko: { rotulo: 'Mais vitórias por KO/TKO', aceita: () => true, comparar: (a, b) => b.vitoriasKo - a.vitoriasKo || b.vitorias - a.vitorias },
-    finalizacoes: { rotulo: 'Mais finalizações', aceita: () => true, comparar: (a, b) => b.vitoriasFinalizacao - a.vitoriasFinalizacao || b.vitorias - a.vitorias },
     taxaFinalizacao: {
       rotulo: 'Maior % de finalização (mín. 8 vitórias)',
       aceita: (lutador) => lutador.vitorias >= 8,
       comparar: (a, b) => taxaFinalizacao(b) - taxaFinalizacao(a) || b.vitorias - a.vitorias
-    },
-    precisao: {
-      rotulo: 'Maior precisão de golpes (mín. 300 tentados)',
-      aceita: (lutador) => lutador.golpesTentados >= 300,
-      comparar: (a, b) => precisaoGolpes(b) - precisaoGolpes(a) || b.golpesTentados - a.golpesTentados
-    },
-    sequencia: {
-      rotulo: 'Maior sequência atual de vitórias',
-      aceita: (lutador) => lutador.sequenciaAtual > 0,
-      comparar: (a, b) => b.sequenciaAtual - a.sequenciaAtual || b.vitorias - a.vitorias
     }
   };
-
-  /* ---------- campeões ---------- */
-  function desenharCampeoes(campeoes) {
-    const ordenados = campeoes.slice().sort((a, b) => ORDEM_CAMPEOES.indexOf(categorias[a[0]]) - ORDEM_CAMPEOES.indexOf(categorias[b[0]]));
-    porId('campeoes').innerHTML = ordenados.map(([categoria, indice, nome, data, evento, adversario]) => {
-      const conteudo = '<span class="categoria-campeao">' + escapar(nomeCategoria(categorias[categoria])) + '</span>'
-        + htmlAvatar(nome, 'medio') + '<b>' + escapar(nome) + '</b><span>' + formatarData(data) + '</span>'
-        + '<small title="' + escapar(evento) + '">vs ' + escapar(adversario) + '</small>';
-      return indice >= 0
-        ? '<a class="cartao-destaque campeao" href="#/lutador/' + indice + '">' + conteudo + '</a>'
-        : '<div class="cartao-destaque campeao">' + conteudo + '</div>';
-    }).join('');
-    observarFotos(porId('campeoes'));
-  }
 
   /* ---------- ranking ---------- */
   function lutadoresFiltrados() {
@@ -102,12 +75,6 @@
     }
   };
 
-  function linhaMedida(rotulo, valor, maximo, sufixo) {
-    const largura = valor == null ? 0 : Math.min(100, (valor / maximo) * 100);
-    const texto = valor == null ? '–' : formatarDecimal(valor, sufixo === '%' ? 0 : 1) + (sufixo || '');
-    return '<div class="linha-medida"><span>' + rotulo + '</span><div class="trilho"><i style="width:' + largura + '%"></i></div><b>' + texto + '</b></div>';
-  }
-
   function desenharPerfil(indice) {
     const lutador = lutadores[indice];
     destruirGraficosPerfil();
@@ -118,8 +85,6 @@
 
     const idade = UFC.calcularIdade(lutador.nascimento);
     const precisao = precisaoGolpes(lutador);
-    const porcentagemDasVitorias = (quantidade) => (lutador.vitorias ? Math.round((quantidade / lutador.vitorias) * 100) : 0);
-    const estatisticas = lutador.estatisticas;
     const totalGolpesPorAlvo = lutador.golpesCabeca + lutador.golpesCorpo + lutador.golpesPerna;
 
     const ultimasLutas = lutador.ultimasLutas.map(([data, adversario, resultado, metodo, round, evento, indiceAdversario]) =>
@@ -164,21 +129,6 @@
         ? '<div class="area-grafico"><canvas id="graficoAlvos"></canvas></div>'
         : '<p class="nota">Sem estatísticas por alvo.</p>') + '</article>'
       + '<article class="cartao"><h3>Vitórias por ano</h3><div class="area-grafico"><canvas id="graficoVitoriasAno"></canvas></div></article>'
-      + '<article class="cartao"><h3>Como venceu</h3>'
-      + linhaMedida('KO/TKO', porcentagemDasVitorias(lutador.vitoriasKo), 100, '%')
-      + linhaMedida('Finalização', porcentagemDasVitorias(lutador.vitoriasFinalizacao), 100, '%')
-      + linhaMedida('Decisão', porcentagemDasVitorias(lutador.vitoriasDecisao), 100, '%')
-      + '<p class="nota">% das ' + lutador.vitorias + ' vitórias no UFC.</p></article>'
-      + '<article class="cartao larga"><h3>Estatísticas de carreira</h3><div class="duas-colunas">'
-      + linhaMedida('Golpes acertados / min', estatisticas.golpesPorMin, 10)
-      + linhaMedida('Golpes absorvidos / min', estatisticas.absorvidosPorMin, 10)
-      + linhaMedida('Precisão de golpes', estatisticas.precisao, 100, '%')
-      + linhaMedida('Defesa de golpes', estatisticas.defesa, 100, '%')
-      + linhaMedida('Quedas / 15 min', estatisticas.quedasPor15, 8)
-      + linhaMedida('Precisão de quedas', estatisticas.precisaoQuedas, 100, '%')
-      + linhaMedida('Defesa de quedas', estatisticas.defesaQuedas, 100, '%')
-      + linhaMedida('Finalizações tentadas / 15 min', estatisticas.finalizacoesPor15, 4)
-      + '</div></article>'
       + '<article class="cartao larga"><h3>Últimas lutas</h3><div class="tabela-rolagem"><table>'
       + '<thead><tr><th>Data</th><th>Evento</th><th>Adversário</th><th>Res.</th><th>Método</th><th>Round</th></tr></thead><tbody>'
       + ultimasLutas + '</tbody></table></div></article>'
@@ -256,7 +206,6 @@
     lutadores = dados.lutadores;
     categorias = dados.categorias;
     metodos = dados.metodos;
-    desenharCampeoes(dados.campeoes || []);
 
     categorias.forEach((nome, indice) => porId('filtroCategoriaLutador').add(new Option(nomeCategoria(nome), indice)));
     Object.entries(ORDENACOES).forEach(([chave, ordenacao]) => porId('ordemLutadores').add(new Option(ordenacao.rotulo, chave)));

@@ -1,12 +1,11 @@
-/* Navegação por hash: #/visao, #/eventos, #/evento/N, #/lutadores, #/lutador/N e #/minha. */
+/* Navegação por hash: #/visao, #/lutadores, #/lutador/N e #/minha. */
 (function () {
   const { porId } = UFC;
-  const PAGINAS = ['visao', 'eventos', 'lutadores', 'minha'];
+  const PAGINAS = ['visao', 'lutadores', 'minha'];
   let ultimoHash = null;
 
   function descobrirDestino() {
     const [rota, argumento] = (location.hash || '#/visao').replace(/^#\/?/, '').split('/');
-    if (rota === 'evento') return { pagina: 'eventos', rota, argumento };
     if (rota === 'lutador') return { pagina: 'lutadores', rota, argumento };
     if (PAGINAS.includes(rota)) return { pagina: rota, rota, argumento };
     return { pagina: 'visao', rota: 'visao', argumento: null };
@@ -16,9 +15,7 @@
     const destino = descobrirDestino();
     PAGINAS.forEach((pagina) => { porId('pagina-' + pagina).hidden = pagina !== destino.pagina; });
     document.querySelectorAll('#menu a').forEach((link) => {
-      const ativo = link.dataset.pagina === destino.pagina;
-      link.classList.toggle('ativo', ativo);
-      if (ativo) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+      link.classList.toggle('ativo', link.dataset.pagina === destino.pagina);
     });
 
     const secao = porId('pagina-' + destino.pagina);

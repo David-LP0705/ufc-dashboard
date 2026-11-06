@@ -16,9 +16,6 @@
   const linhasFiltradas = (ignorarCategoria) => dados.linhas.filter(([ano, categoria]) =>
     ano >= filtro.de && ano <= filtro.ate && (ignorarCategoria || filtro.categoria < 0 || categoria === filtro.categoria));
 
-  const duracoesFiltradas = (ignorarCategoria) => dados.duracoes.filter(([ano, categoria]) =>
-    ano >= filtro.de && ano <= filtro.ate && (ignorarCategoria || filtro.categoria < 0 || categoria === filtro.categoria));
-
   function calcularMaioresVencedores(quantidade) {
     const lista = [];
     for (const lutador of lutadores) {
@@ -94,17 +91,6 @@
         }
       })
     });
-
-    graficos.duracao = new Chart(porId('graficoDuracao'), {
-      type: 'bar',
-      data: { labels: [], datasets: [{ label: 'Minutos', data: [], backgroundColor: [] }] },
-      options: opcoesGrafico('Categoria de peso', 'Duração média (minutos)', {
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: (item) => ' ' + formatarDecimal(item.parsed.y) + ' min' } }
-        }
-      })
-    });
   }
 
   function atualizar() {
@@ -119,12 +105,9 @@
     const anos = [];
     for (let ano = filtro.de; ano <= filtro.ate; ano++) anos.push(ano);
 
-    const [lutasComDuracao, minutosTotais] = duracoesFiltradas(false)
-      .reduce((soma, [, , lutasDoGrupo, minutos]) => [soma[0] + lutasDoGrupo, soma[1] + minutos], [0, 0]);
     porId('indicadorLutas').textContent = formatarNumero(totalLutas);
     porId('indicadorFinalizacao').textContent = lutasDecididas
       ? formatarDecimal(((totais.ko + totais.finalizacao) / lutasDecididas) * 100) + '%' : '–';
-    porId('indicadorDuracao').textContent = lutasComDuracao ? formatarDecimal(minutosTotais / lutasComDuracao) : '–';
 
     graficos.metodos.data.datasets[0].data = [totais.ko, totais.finalizacao, totais.decisao, totais.outros];
     graficos.metodos.update();
@@ -150,21 +133,6 @@
     graficos.vitorias.data.labels = maioresVencedores.map(([lutador]) => lutador.nome);
     graficos.vitorias.data.datasets[0].data = maioresVencedores.map(([, vitorias]) => vitorias);
     graficos.vitorias.update();
-
-    const duracaoPorCategoria = Array(categorias.length).fill(0).map(() => [0, 0]);
-    duracoesFiltradas(true).forEach(([, categoria, lutasDoGrupo, minutos]) => {
-      duracaoPorCategoria[categoria][0] += lutasDoGrupo;
-      duracaoPorCategoria[categoria][1] += minutos;
-    });
-    const mediasPorCategoria = duracaoPorCategoria
-      .map(([quantidade, minutos], categoria) => [categoria, quantidade ? minutos / quantidade : 0, quantidade])
-      .filter(([, , quantidade]) => quantidade >= 10)
-      .sort((a, b) => b[1] - a[1]);
-    graficos.duracao.data.labels = mediasPorCategoria.map(([categoria]) => nomeCategoria(categorias[categoria]));
-    graficos.duracao.data.datasets[0].data = mediasPorCategoria.map(([, media]) => Math.round(media * 10) / 10);
-    graficos.duracao.data.datasets[0].backgroundColor = mediasPorCategoria
-      .map(([categoria]) => (categoria === filtro.categoria ? CORES.ouro : CORES.vermelho));
-    graficos.duracao.update();
 
     porId('destaques').innerHTML = maioresVencedores.slice(0, 5).map(([lutador, vitorias]) =>
       '<a class="cartao-destaque" href="#/lutador/' + lutador.indice + '">' + htmlAvatar(lutador.nome, 'medio')

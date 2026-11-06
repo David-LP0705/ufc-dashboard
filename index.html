@@ -15,7 +15,6 @@
     <a class="marca" href="#/visao"><span class="logo">UFC</span><span class="subtitulo">Dashboard</span></a>
     <nav id="menu" aria-label="Seções">
       <a href="#/visao" data-pagina="visao">Visão geral</a>
-      <a href="#/eventos" data-pagina="eventos">Eventos</a>
       <a href="#/lutadores" data-pagina="lutadores">Lutadores</a>
       <a href="#/minha" data-pagina="minha">Minha área</a>
     </nav>
@@ -27,7 +26,7 @@
     <section id="pagina-visao" class="pagina" hidden>
       <div class="titulo">
         <h1>Visão geral</h1>
-        <p>Lutas do UFC de 1993 a 2026: como terminam, quanto duram e quem mais venceu.</p>
+        <p>Lutas do UFC de 1993 a 2026: como terminam e quem mais venceu.</p>
       </div>
 
       <div class="filtros cartao" aria-label="Filtros">
@@ -46,7 +45,6 @@
       <div class="indicadores" aria-label="Indicadores">
         <div class="cartao indicador"><span id="indicadorLutas">–</span><small>lutas no filtro</small></div>
         <div class="cartao indicador"><span id="indicadorFinalizacao">–</span><small>terminaram antes dos juízes</small></div>
-        <div class="cartao indicador"><span id="indicadorDuracao">–</span><small>duração média (min)</small></div>
         <div class="cartao indicador"><span id="indicadorEventos">–</span><small>eventos na base</small></div>
         <div class="cartao indicador"><span id="indicadorLutadores">–</span><small>lutadores na base</small></div>
       </div>
@@ -74,36 +72,7 @@
           <p class="nota">Clique em uma barra para abrir o perfil.</p>
           <div class="area-grafico alta"><canvas id="graficoVitorias"></canvas></div>
         </article>
-        <article class="cartao larga">
-          <h3>Duração média das lutas por categoria</h3>
-          <p class="nota">Em minutos, calculada pelo round e pelo tempo do fim da luta. Respeita o período.</p>
-          <div class="area-grafico"><canvas id="graficoDuracao"></canvas></div>
-        </article>
       </div>
-    </section>
-
-    <!-- Eventos e lutas -->
-    <section id="pagina-eventos" class="pagina" hidden>
-      <div class="titulo">
-        <h1>Eventos e lutas</h1>
-        <p>Histórico de eventos do UFC, com o card de lutas e os resultados.</p>
-      </div>
-
-      <div id="blocoListaEventos">
-        <div class="filtros cartao">
-          <label class="campo-busca">Buscar evento ou local
-            <input type="search" id="buscaEvento" placeholder="Ex.: UFC 100, Las Vegas, Rio…">
-          </label>
-          <label>Ano
-            <select id="filtroAnoEvento"><option value="">Todos</option></select>
-          </label>
-        </div>
-        <p id="infoEventos" class="nota"></p>
-        <div id="listaEventos" class="lista-eventos"></div>
-        <div class="centro"><button id="botaoMaisEventos" type="button" class="secundario">Mostrar mais</button></div>
-      </div>
-
-      <div id="detalheEvento" hidden></div>
     </section>
 
     <!-- Lutadores -->
@@ -111,12 +80,8 @@
       <div id="blocoListaLutadores">
         <div class="titulo">
           <h1>Lutadores</h1>
-          <p>Ranking dos lutadores com 5 ou mais lutas no UFC. Clique em um nome para ver o perfil.</p>
+          <p>Lutadores com 5 ou mais lutas no UFC. Clique em um nome para ver o perfil.</p>
         </div>
-
-        <h2 class="secao">Últimos vencedores de cinturão</h2>
-        <p class="nota">Segundo a base (até agosto de 2026): vencedor da luta de título mais recente de cada categoria. Pode não coincidir com o campeão oficial atual em caso de título vago, interino ou aposentadoria.</p>
-        <div id="campeoes" class="destaques"></div>
 
         <div class="filtros cartao">
           <label class="campo-busca">Buscar lutador
@@ -223,7 +188,6 @@
   <script src="config.js"></script>
   <script src="js/nucleo.js"></script>
   <script src="js/visao-geral.js"></script>
-  <script src="js/eventos.js"></script>
   <script src="js/lutadores.js"></script>
   <script src="js/minha-area.js"></script>
   <script src="js/principal.js"></script>
